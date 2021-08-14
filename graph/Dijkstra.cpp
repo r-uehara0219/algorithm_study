@@ -25,7 +25,12 @@ using ll = long long;
 #define MP make_pair
 #define MEMSET(v, h) memset((v), h, sizeof(v))
 #define endl "\n"
-using Edge = pair<int, int>;
+// using Edge = pair<int, int>;
+using P = pair<int, int>;
+struct Edge
+{
+  int to, cost;
+};
 using Graph = vector<vector<Edge>>;
 template <class T>
 inline bool chmax(T &a, T b)
@@ -57,26 +62,26 @@ const int INF = 1001001001;
 
 void dijkstra(int s)
 {
-  // Edge.fisrt => 最短距離
-  // Edge.second => 頂点の番号
-  priority_queue<Edge, vector<Edge>, greater<Edge>> que;
+  // P.fisrt => 最短距離
+  // P.second => 頂点の番号
+  priority_queue<P, vector<P>, greater<P>> que;
   fill(d, d + V, INF);
   d[s] = 0;
-  que.push(Edge(0, s));
+  que.push(P(0, s));
 
   while (!que.empty())
   {
-    Edge p = que.top();
+    P p = que.top();
     que.pop();
     int v = p.second;
     if (d[v] < p.first)
       continue;
     for (auto x : G[v])
     {
-      if (d[x.first] > d[v] + x.second)
+      if (d[x.to] > d[v] + x.cost)
       {
-        d[x.first] = d[v] + x.second;
-        que.push(Edge(d[x.first], x.first));
+        d[x.to] = d[v] + x.cost;
+        que.push(P(d[x.to], x.to));
       }
     }
   }
@@ -91,7 +96,10 @@ int main(void)
   {
     int s, t, d;
     cin >> s >> t >> d;
-    G[s].PB(MP(t, d));
+    Edge edge;
+    edge.to = t;
+    edge.cost = d;
+    G[s].PB(edge);
   }
   dijkstra(r);
   FOR(i, 0, V - 1)
